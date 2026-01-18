@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Chile Trip — February 2026</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        
+        #map {
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
+        }
+        
+        /* Legend - desktop only */
+        .legend {
+            background: white;
+            padding: 14px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .legend h4 {
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #1a1a2e;
+            font-weight: 600;
+            border-bottom: 2px solid #e63946;
+            padding-bottom: 6px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            margin-right: 8px;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        
+        /* Info Panel */
+        .info-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: 260px;
+            max-height: calc(100vh - 100px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        
+        .panel-header h3 {
+            color: #1a1a2e;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .panel-content {
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .day-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .day-item:hover {
+            background: #f8f8f8;
+        }
+        
+        .day-item:active {
+            background: #f0f0f0;
+        }
+        
+        .day-item:last-child {
+            border-bottom: none;
+        }
+        
+        .day-number {
+            width: 32px;
+            height: 32px;
+            background: #e63946;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .day-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .day-location {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 13px;
+        }
+        
+        .day-dates {
+            color: #e63946;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+        
+        .day-activity {
+            color: #666;
+            font-size: 11px;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+        
+        .day-drive {
+            color: #999;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+        
+        /* Popups */
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .leaflet-popup-content {
+            margin: 12px 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 13px;
+        }
+        
+        .popup-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+        
+        .popup-date {
+            color: #e63946;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .popup-desc {
+            color: #555;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .popup-meta {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .route-label {
+            background: white;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        /* Mobile toggle button */
+        .panel-toggle {
+            display: none;
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .panel-toggle:active {
+            background: #f0f0f0;
+        }
+        
+        /* Mobile panel */
+        @media (max-width: 600px) {
+            .legend {
+                display: none;
+            }
+            
+            .panel-toggle {
+                display: block;
+            }
+            
+            .info-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                max-width: 85vw;
+                width: 300px;
+                border-radius: 0;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                z-index: 1001;
+                max-height: 100vh;
+                max-height: 100dvh;
+            }
+            
+            .info-panel.open {
+                transform: translateX(0);
+            }
+            
+            .panel-close {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                background: #f0f0f0;
+                border: none;
+                border-radius: 50%;
+                font-size: 18px;
+                color: #666;
+                cursor: pointer;
+            }
+            
+            .panel-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 1000;
+            }
+            
+            .panel-overlay.open {
+                display: block;
+            }
+            
+            .day-item {
+                padding: 14px 16px;
+            }
+            
+            .day-number {
+                width: 36px;
+                height: 36px;
+                font-size: 13px;
+            }
+            
+            .leaflet-control-zoom {
+                margin-bottom: 20px !important;
+            }
+        }
+        
+        @media (min-width: 601px) {
+            .panel-close {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <button class="panel-toggle" id="panelToggle">🇨🇱 Itinerary</button>
+    <div class="panel-overlay" id="panelOverlay"></div>
+    
+    <script>
+        // Initialize map
+        const map = L.map('map', {
+            zoomControl: false,
+            tap: true
+        }).setView([-27.5, -70.5], 6);
+        
+        // Add zoom control
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+        
+        // Tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Colors
+        const colors = {
+            sleep: '#e63946',
+            highlight: '#2a9d8f',
+            route: '#e63946',
+            flight: '#7c3aed'
+        };
+        
+        // Marker creators
+        function createSleepMarker(label) {
+            return L.divIcon({
+                className: 'sleep-marker',
+                html: `<div style="
+                    background: ${colors.sleep};
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    font-size: 12px;
+                    color: white;
+                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                ">${label}</div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+            });
+        }
+        
+        function createHighlightMarker() {
+            return L.divIcon({
+                className: 'highlight-marker',
+                html: `<div style="
+                    background: ${colors.highlight};
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    border: 2px solid white;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+                "></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                popupAnchor: [0, -8]
+            });
+        }
+        
+        // Data - overnight stays with single-number labels
+        const overnightStays = [
+            {
+                id: 1,
+                label: '8',
+                dates: 'Feb 8',
+                name: 'Santiago',
+                coords: [-33.4489, -70.6693],
+                desc: 'Arrive. Day trip to Cajón del Maipo.',
+                nights: 1
+            },
+            {
+                id: 2,
+                label: '9',
+                dates: 'Feb 9–10',
+                name: 'Valparaíso',
+                coords: [-33.0472, -71.6127],
+                desc: 'Cerros, funiculars, street art, Neruda\'s house',
+                drive: '1.5h from Santiago',
+                nights: 2
+            },
+            {
+                id: 3,
+                label: '11',
+                dates: 'Feb 11–12',
+                name: 'San Pedro de Atacama',
+                coords: [-22.9087, -68.1997],
+                desc: 'El Tatio geysers, Valle de la Luna sunset',
+                drive: '✈ 2h flight + 1h drive',
+                nights: 2
+            },
+            {
+                id: 4,
+                label: '13',
+                dates: 'Feb 13',
+                name: 'Antofagasta',
+                coords: [-23.6509, -70.3975],
+                desc: 'Transit stop. Mano del Desierto en route.',
+                drive: '3.5h from San Pedro',
+                nights: 1
+            },
+            {
+                id: 5,
+                label: '14',
+                dates: 'Feb 14–15',
+                name: 'Bahía Inglesa',
+                coords: [-27.1167, -70.8667],
+                desc: 'Beach break. Pan de Azúcar NP en route.',
+                drive: '4.5h from Antofagasta',
+                nights: 2
+            },
+            {
+                id: 6,
+                label: '16',
+                dates: 'Feb 16–18',
+                name: 'La Serena',
+                coords: [-29.9027, -71.2519],
+                desc: 'Isla Damas penguins, Valle del Elqui pisco',
+                drive: '4.5h from Bahía Inglesa',
+                nights: 3
+            },
+            {
+                id: 7,
+                label: '19',
+                dates: 'Feb 19',
+                name: 'Santiago',
+                coords: [-33.4569, -70.6483],
+                desc: 'Final night. Fly home Feb 20.',
+                drive: '5h from La Serena',
+                nights: 1
+            }
+        ];
+        
+        // Day trip highlights
+        const highlights = [
+            {
+                date: 'Feb 8',
+                name: 'Cajón del Maipo',
+                coords: [-33.78, -70.08],
+                desc: 'Embalse El Yeso, Baños Colina hot springs',
+                from: 'Day trip from Santiago'
+            },
+            {
+                date: 'Feb 12',
+                name: 'El Tatio Geysers',
+                coords: [-22.3333, -68.0167],
+                desc: '4am departure. 4,300m altitude.',
+                from: '1.5h from San Pedro'
+            },
+            {
+                date: 'Feb 12',
+                name: 'Valle de la Luna',
+                coords: [-22.9167, -68.2833],
+                desc: 'Sunset. Salt formations glowing gold.',
+                from: '20min from San Pedro'
+            },
+            {
+                date: 'Feb 13',
+                name: 'Mano del Desierto',
+                coords: [-24.1556, -70.1567],
+                desc: 'Giant hand sculpture in the desert',
+                from: 'Stop en route'
+            },
+            {
+                date: 'Feb 14',
+                name: 'Pan de Azúcar NP',
+                coords: [-26.1500, -70.6333],
+                desc: 'Coastal desert. Cacti, guanacos.',
+                from: 'Morning stop en route'
+            },
+            {
+                date: 'Feb 17',
+                name: 'Isla Damas',
+                coords: [-29.2500, -71.4667],
+                desc: 'Boat trip: penguins, dolphins, sea lions',
+                from: '1.5h from La Serena'
+            },
+            {
+                date: 'Feb 18',
+                name: 'Valle del Elqui',
+                coords: [-30.1, -70.5],
+                desc: 'Pisco distilleries, Vicuña',
+                from: '1h from La Serena'
+            }
+        ];
+        
+        // Routes
+        L.polyline([
+            [-33.4489, -70.6693],
+            [-33.0472, -71.6127]
+        ], {
+            color: colors.route,
+            weight: 3,
+            opacity: 0.7
+        }).addTo(map);
+        
+        L.polyline([
+            [-22.9087, -68.1997],
+            [-23.6509, -70.3975],
+            [-27.1167, -70.8667],
+            [-29.9027, -71.2519],
+            [-33.4569, -70.6483]
+        ], {
+            color: colors.route,
+            weight: 3,
+            opacity: 0.7
+        }).addTo(map);
+        
+        // Flight
+        L.polyline([
+            [-33.0472, -71.6127],
+            [-22.9087, -68.1997]
+        ], {
+            color: colors.flight,
+            weight: 2,
+            dashArray: '6, 6',
+            opacity: 0.8
+        }).addTo(map);
+        
+        // Route labels
+        const routeLabels = [
+            { coords: [-33.25, -70.95], text: '1.5h' },
+            { coords: [-23.25, -69.4], text: '3.5h' },
+            { coords: [-25.5, -70.6], text: '4.5h' },
+            { coords: [-28.55, -70.95], text: '4.5h' },
+            { coords: [-31.7, -70.85], text: '5h' },
+        ];
+        
+        routeLabels.forEach(label => {
+            L.marker(label.coords, {
+                icon: L.divIcon({
+                    className: 'route-label-icon',
+                    html: `<div class="route-label">${label.text}</div>`,
+                    iconSize: [36, 18],
+                    iconAnchor: [18, 9]
+                }),
+                interactive: false
+            }).addTo(map);
+        });
+        
+        // Flight label
+        L.marker([-27.8, -69.3], {
+            icon: L.divIcon({
+                className: 'route-label-icon',
+                html: `<div class="route-label" style="background: ${colors.flight}; color: white;">✈ 2h</div>`,
+                iconSize: [42, 18],
+                iconAnchor: [21, 9]
+            }),
+            interactive: false
+        }).addTo(map);
+        
+        // Marker refs
+        const markerRefs = {};
+        
+        // Add overnight markers
+        overnightStays.forEach(stay => {
+            const marker = L.marker(stay.coords, {
+                icon: createSleepMarker(stay.label),
+                zIndexOffset: 1000
+            }).addTo(map);
+            
+            let popup = `
+                <div class="popup-title">${stay.name}</div>
+                <div class="popup-date">${stay.dates} · ${stay.nights} night${stay.nights > 1 ? 's' : ''}</div>
+                <div class="popup-desc">${stay.desc}</div>
+            `;
+            if (stay.drive) {
+                popup += `<div class="popup-meta">${stay.drive}</div>`;
+            }
+            
+            marker.bindPopup(popup);
+            markerRefs[stay.id] = marker;
+        });
+        
+        // Add highlight markers
+        highlights.forEach(h => {
+            const marker = L.marker(h.coords, {
+                icon: createHighlightMarker()
+            }).addTo(map);
+            
+            marker.bindPopup(`
+                <div class="popup-title">${h.name}</div>
+                <div class="popup-date">${h.date}</div>
+                <div class="popup-desc">${h.desc}</div>
+                <div class="popup-meta">${h.from}</div>
+            `);
+        });
+        
+        // Legend (desktop)
+        const legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function() {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `
+                <h4>Chile Feb 2026</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: ${colors.sleep};"></div>
+                    <span>Overnight stay</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: ${colors.highlight}; width: 10px; height: 10px;"></div>
+                    <span>Day trip</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: ${colors.route};"></div>
+                    <span>Drive</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: ${colors.flight};"></div>
+                    <span>Flight</span>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+        
+        // Info panel
+        const infoPanel = L.control({ position: 'topright' });
+        infoPanel.onAdd = function() {
+            const div = L.DomUtil.create('div', 'info-panel');
+            div.id = 'infoPanel';
+            
+            let html = `
+                <div class="panel-header">
+                    <h3>🇨🇱 Itinerary</h3>
+                    <button class="panel-close" onclick="closePanel()">×</button>
+                </div>
+                <div class="panel-content">
+            `;
+            
+            overnightStays.forEach(stay => {
+                html += `
+                    <div class="day-item" onclick="flyToStop(${stay.id})">
+                        <div class="day-number">${stay.label}</div>
+                        <div class="day-info">
+                            <div class="day-location">${stay.name}</div>
+                            <div class="day-dates">${stay.dates}</div>
+                            <div class="day-activity">${stay.desc}</div>
+                            ${stay.drive ? `<div class="day-drive">${stay.drive}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            div.innerHTML = html;
+            
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
+            
+            return div;
+        };
+        infoPanel.addTo(map);
+        
+        // Panel toggle (mobile)
+        const toggle = document.getElementById('panelToggle');
+        const overlay = document.getElementById('panelOverlay');
+        
+        toggle.addEventListener('click', function() {
+            document.getElementById('infoPanel').classList.add('open');
+            overlay.classList.add('open');
+        });
+        
+        overlay.addEventListener('click', closePanel);
+        
+        window.closePanel = function() {
+            document.getElementById('infoPanel').classList.remove('open');
+            overlay.classList.remove('open');
+        };
+        
+        window.flyToStop = function(id) {
+            const stay = overnightStays.find(s => s.id === id);
+            if (stay) {
+                // Close panel on mobile
+                if (window.innerWidth <= 600) {
+                    closePanel();
+                }
+                map.flyTo(stay.coords, 9, { duration: 0.6 });
+                setTimeout(() => {
+                    markerRefs[id].openPopup();
+                }, 600);
+            }
+        };
+    </script>
+</body>
+</html>
