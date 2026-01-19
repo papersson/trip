@@ -9,6 +9,7 @@
     <title>Chile Trip — February 2026</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
     <style>
         * {
             margin: 0;
@@ -430,7 +431,7 @@
                 name: 'San Pedro de Atacama',
                 coords: [-22.9087, -68.1997],
                 desc: 'El Tatio geysers, Valle de la Luna sunset',
-                drive: '✈ 2h flight + 1h drive',
+                drive: '✈ Santiago → Calama: 2h flight + 1h drive',
                 nights: 2
             },
             {
@@ -528,46 +529,64 @@
             }
         ];
         
-        // Routes
-        L.polyline([
-            [-33.4489, -70.6693],
-            [-33.0472, -71.6127]
-        ], {
-            color: colors.route,
-            weight: 3,
-            opacity: 0.7
-        }).addTo(map);
-        
-        L.polyline([
-            [-22.9087, -68.1997],
-            [-23.6509, -70.3975],
-            [-27.1167, -70.8667],
-            [-29.9027, -71.2519],
-            [-33.4569, -70.6483]
-        ], {
-            color: colors.route,
-            weight: 3,
-            opacity: 0.7
-        }).addTo(map);
-        
-        // Flight
-        L.polyline([
-            [-33.0472, -71.6127],
-            [-22.9087, -68.1997]
-        ], {
-            color: colors.flight,
-            weight: 2,
-            dashArray: '6, 6',
-            opacity: 0.8
-        }).addTo(map);
+        // Helper to create a route segment with arrow
+        function addRouteSegment(from, to, color, dashed) {
+            const line = L.polyline([from, to], {
+                color: color,
+                weight: dashed ? 2 : 3,
+                opacity: dashed ? 0.8 : 0.7,
+                dashArray: dashed ? '6, 6' : null
+            }).addTo(map);
+
+            L.polylineDecorator(line, {
+                patterns: [{
+                    offset: '35%',
+                    repeat: 0,
+                    symbol: L.Symbol.arrowHead({
+                        pixelSize: 12,
+                        polygon: false,
+                        pathOptions: { stroke: true, weight: 2, color: color, opacity: 0.9 }
+                    })
+                }]
+            }).addTo(map);
+
+            return line;
+        }
+
+        // Coordinates
+        const coords = {
+            santiago: [-33.4489, -70.6693],
+            santiagoAirport: [-33.3930, -70.7858],
+            valparaiso: [-33.0472, -71.6127],
+            calamaAirport: [-22.4982, -68.9036],
+            sanPedro: [-22.9087, -68.1997],
+            antofagasta: [-23.6509, -70.3975],
+            bahiaInglesa: [-27.1167, -70.8667],
+            laSerena: [-29.9027, -71.2519],
+            santiagoEnd: [-33.4569, -70.6483]
+        };
+
+        // Drive routes
+        addRouteSegment(coords.santiago, coords.valparaiso, colors.route, false);
+        addRouteSegment(coords.valparaiso, coords.santiagoAirport, colors.route, false);
+        addRouteSegment(coords.calamaAirport, coords.sanPedro, colors.route, false);
+        addRouteSegment(coords.sanPedro, coords.antofagasta, colors.route, false);
+        addRouteSegment(coords.antofagasta, coords.bahiaInglesa, colors.route, false);
+        addRouteSegment(coords.bahiaInglesa, coords.laSerena, colors.route, false);
+        addRouteSegment(coords.laSerena, coords.santiagoEnd, colors.route, false);
+
+        // Flight: Santiago (SCL) to Calama (CJC)
+        addRouteSegment(coords.santiagoAirport, coords.calamaAirport, colors.flight, true);
         
         // Route labels
         const routeLabels = [
-            { coords: [-33.25, -70.95], text: '1.5h' },
-            { coords: [-23.25, -69.4], text: '3.5h' },
-            { coords: [-25.5, -70.6], text: '4.5h' },
-            { coords: [-28.55, -70.95], text: '4.5h' },
-            { coords: [-31.7, -70.85], text: '5h' },
+            { coords: [-33.35, -71.25], text: '1.5h' },   // Santiago → Valparaíso
+            { coords: [-33.15, -70.95], text: '1.5h' },   // Valparaíso → Santiago airport
+            { coords: [-22.7, -68.55], text: '1h' },      // Calama → San Pedro
+            { coords: [-23.25, -69.4], text: '3.5h' },    // San Pedro → Antofagasta
+            { coords: [-25.5, -70.6], text: '4.5h' },     // Antofagasta → Bahía Inglesa
+            { coords: [-28.55, -70.95], text: '4.5h' },   // Bahía Inglesa → La Serena
+            { coords: [-31.7, -70.85], text: '5h' },      // La Serena → Santiago
         ];
         
         routeLabels.forEach(label => {
@@ -583,7 +602,7 @@
         });
         
         // Flight label
-        L.marker([-27.8, -69.3], {
+        L.marker([-27.95, -69.8], {
             icon: L.divIcon({
                 className: 'route-label-icon',
                 html: `<div class="route-label" style="background: ${colors.flight}; color: white;">✈ 2h</div>`,
@@ -704,7 +723,7 @@
             overlay.classList.add('open');
         });
         
-        overlay.addEventListener('click', closePanel);
+        overlay.addEventListener('click', function() { closePanel(); });
         
         window.closePanel = function() {
             document.getElementById('infoPanel').classList.remove('open');
