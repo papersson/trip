@@ -328,13 +328,278 @@
                 display: none;
             }
         }
+
+        /* Details toggle button */
+        .details-toggle {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .details-toggle:hover {
+            background: #f8f8f8;
+        }
+
+        .details-toggle:active {
+            background: #f0f0f0;
+        }
+
+        /* Details Modal */
+        .details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .details-modal.open {
+            display: flex;
+        }
+
+        .details-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+
+        .details-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .details-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #1a1a2e;
+        }
+
+        .details-close {
+            width: 32px;
+            height: 32px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .details-close:hover {
+            background: #e0e0e0;
+        }
+
+        .details-body {
+            padding: 24px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .details-intro {
+            color: #666;
+            font-size: 14px;
+            margin: 0 0 24px 0;
+        }
+
+        .details-body h3 {
+            font-size: 14px;
+            color: #1a1a2e;
+            margin: 24px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e63946;
+        }
+
+        .details-body h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .accom-card {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+
+        .accom-dates {
+            font-size: 11px;
+            font-weight: 600;
+            color: #e63946;
+            margin-bottom: 4px;
+        }
+
+        .accom-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .accom-location {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .accom-details {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .plan-section {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .notes-list {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 600px) {
+            .details-toggle {
+                top: auto;
+                bottom: 12px;
+                left: 12px;
+            }
+
+            .details-content {
+                max-height: 85vh;
+            }
+
+            .details-body {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
     
     <button class="panel-toggle" id="panelToggle">🇨🇱 Itinerary</button>
+    <button class="details-toggle" id="detailsToggle">📋 Details</button>
     <div class="panel-overlay" id="panelOverlay"></div>
+
+    <!-- Details Modal -->
+    <div class="details-modal" id="detailsModal">
+        <div class="details-content">
+            <div class="details-header">
+                <h2>Chile Trip - February 2026</h2>
+                <button class="details-close" onclick="closeDetails()">×</button>
+            </div>
+            <div class="details-body">
+                <p class="details-intro">Road trip through northern Chile: Santiago to Atacama Desert and back along the coast.</p>
+
+                <h3>Accommodation</h3>
+
+                <div class="accom-card">
+                    <div class="accom-dates">Feb 11–13</div>
+                    <div class="accom-name">EcoLodge MAKTVB</div>
+                    <div class="accom-location">San Pedro de Atacama</div>
+                    <div class="accom-details">
+                        Check-in: Wed Feb 11, 3:00 PM · Check-out: Fri Feb 13, 12:00 PM<br>
+                        ✓ Parking ✓ Breakfast ✓ Laundry
+                    </div>
+                </div>
+
+                <div class="accom-card">
+                    <div class="accom-dates">Feb 13–14</div>
+                    <div class="accom-name">AH Hotel</div>
+                    <div class="accom-location">Antofagasta</div>
+                    <div class="accom-details">
+                        Check-in: Fri Feb 13, 3:30 PM · Check-out: Sat Feb 14, 11:30 AM<br>
+                        Transit stop (arrive late, leave early)<br>
+                        ✓ Parking ✓ Laundry
+                    </div>
+                </div>
+
+                <div class="accom-card">
+                    <div class="accom-dates">Feb 14–16</div>
+                    <div class="accom-name">AirBnB - Cabaña Hermosa 1</div>
+                    <div class="accom-location">Caldera (Bahía Inglesa)</div>
+                    <div class="accom-details">
+                        2 bedrooms, 3 beds, 1 bath<br>
+                        ✓ Laundry ✓ Pets allowed<br>
+                        Free cancellation before Feb 13
+                    </div>
+                </div>
+
+                <div class="accom-card">
+                    <div class="accom-dates">Feb 16–18</div>
+                    <div class="accom-name">Hotel Casa de Piedra</div>
+                    <div class="accom-location">Coquimbo (La Serena)</div>
+                    <div class="accom-details">
+                        Camino Las Parcelas Lote 8, #5531<br>
+                        Check-in: Mon Feb 16, 2:00 PM · Check-out: Wed Feb 18, 12:00 PM<br>
+                        ✓ Breakfast ✓ Close to beach ✓ Parking ✓ WiFi
+                    </div>
+                </div>
+
+                <div class="accom-card">
+                    <div class="accom-dates">Feb 18–20</div>
+                    <div class="accom-name">Cabañas Between Hills</div>
+                    <div class="accom-location">San Alfonso (Cajón del Maipo)</div>
+                    <div class="accom-details">
+                        30476 Camino Al Volcán<br>
+                        Check-in: Wed Feb 18, 2:30 PM · Check-out: Fri Feb 20, 12:30 PM<br>
+                        2-bedroom apartment (1 full + 4 bunks) · Kitchen · Pool<br>
+                        ✓ Parking ✓ Restaurant ✓ Pet friendly<br>
+                        Quiet hours: 11 PM – 10 AM
+                    </div>
+                </div>
+
+                <h3>Final Days Plan</h3>
+                <div class="plan-section">
+                    <strong>Feb 18:</strong> Drive from La Serena (5h), day in Santiago, then to San Alfonso<br>
+                    <strong>Feb 19:</strong> Full day in mountains — Baños Morales thermal baths (1,850m, open 24h)<br>
+                    <strong>Feb 20:</strong> Return early to Santiago, fly home
+                </div>
+
+                <h3>Notes</h3>
+                <ul class="notes-list">
+                    <li>All accommodations have parking</li>
+                    <li>Laundry: San Pedro, Antofagasta, Bahía Inglesa</li>
+                    <li>Breakfast included: San Pedro, La Serena</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     
     <script>
         // Initialize map
@@ -431,6 +696,7 @@
                 name: 'San Pedro de Atacama',
                 coords: [-22.9087, -68.1997],
                 desc: 'El Tatio geysers, Valle de la Luna sunset',
+                accom: 'EcoLodge MAKTVB. Breakfast, laundry.',
                 drive: '✈ Santiago → Calama: 2h flight + 1h drive',
                 nights: 2
             },
@@ -441,6 +707,7 @@
                 name: 'Antofagasta',
                 coords: [-23.6509, -70.3975],
                 desc: 'Transit stop. Mano del Desierto en route.',
+                accom: 'AH Hotel. Laundry.',
                 drive: '3.5h from San Pedro',
                 nights: 1
             },
@@ -451,28 +718,31 @@
                 name: 'Bahía Inglesa',
                 coords: [-27.1167, -70.8667],
                 desc: 'Beach break. Pan de Azúcar NP en route.',
+                accom: 'AirBnB Cabaña Hermosa. Laundry.',
                 drive: '4.5h from Antofagasta',
                 nights: 2
             },
             {
                 id: 6,
                 label: '16',
-                dates: 'Feb 16–18',
+                dates: 'Feb 16–17',
                 name: 'La Serena',
                 coords: [-29.9027, -71.2519],
                 desc: 'Isla Damas penguins, Valle del Elqui pisco',
+                accom: 'Hotel Casa de Piedra. Breakfast.',
                 drive: '4.5h from Bahía Inglesa',
-                nights: 3
+                nights: 2
             },
             {
                 id: 7,
-                label: '19',
-                dates: 'Feb 19',
-                name: 'Santiago',
-                coords: [-33.4569, -70.6483],
-                desc: 'Final night. Fly home Feb 20.',
+                label: '18',
+                dates: 'Feb 18–19',
+                name: 'Cajón del Maipo',
+                coords: [-33.7083, -70.1833],
+                desc: 'Mountains & Baños Morales thermal baths. Fly home Feb 20.',
+                accom: 'Cabañas Between Hills',
                 drive: '5h from La Serena',
-                nights: 1
+                nights: 2
             }
         ];
         
@@ -521,11 +791,18 @@
                 from: '1.5h from La Serena'
             },
             {
-                date: 'Feb 18',
+                date: 'Feb 17',
                 name: 'Valle del Elqui',
                 coords: [-30.1, -70.5],
                 desc: 'Pisco distilleries, Vicuña',
                 from: '1h from La Serena'
+            },
+            {
+                date: 'Feb 19',
+                name: 'Baños Morales',
+                coords: [-33.8167, -70.0667],
+                desc: 'Natural thermal baths at 1,850m. Open 24h.',
+                from: '30min from San Alfonso'
             }
         ];
         
@@ -627,6 +904,9 @@
                 <div class="popup-date">${stay.dates} · ${stay.nights} night${stay.nights > 1 ? 's' : ''}</div>
                 <div class="popup-desc">${stay.desc}</div>
             `;
+            if (stay.accom) {
+                popup += `<div class="popup-meta" style="font-weight: 500; color: #555;">🏨 ${stay.accom}</div>`;
+            }
             if (stay.drive) {
                 popup += `<div class="popup-meta">${stay.drive}</div>`;
             }
@@ -698,6 +978,7 @@
                             <div class="day-location">${stay.name}</div>
                             <div class="day-dates">${stay.dates}</div>
                             <div class="day-activity">${stay.desc}</div>
+                            ${stay.accom ? `<div class="day-drive" style="color: #666;">🏨 ${stay.accom}</div>` : ''}
                             ${stay.drive ? `<div class="day-drive">${stay.drive}</div>` : ''}
                         </div>
                     </div>
@@ -743,6 +1024,32 @@
                 }, 600);
             }
         };
+
+        // Details modal
+        const detailsToggle = document.getElementById('detailsToggle');
+        const detailsModal = document.getElementById('detailsModal');
+
+        detailsToggle.addEventListener('click', function() {
+            detailsModal.classList.add('open');
+        });
+
+        detailsModal.addEventListener('click', function(e) {
+            if (e.target === detailsModal) {
+                closeDetails();
+            }
+        });
+
+        window.closeDetails = function() {
+            detailsModal.classList.remove('open');
+        };
+
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDetails();
+                closePanel();
+            }
+        });
     </script>
 </body>
 </html>
