@@ -6,7 +6,7 @@ Road trip through northern Chile: Santiago to Atacama Desert and back along the 
 
 | Dates | Location | Nights | Accommodation |
 |-------|----------|--------|---------------|
-| Feb 8 | Santiago | 1 | — |
+| Feb 8 | Santiago | 1 | Hostel Boutique Merced 88 |
 | Feb 9–10 | Valparaiso | 2 | — |
 | Feb 11–12 | San Pedro de Atacama | 2 | EcoLodge MAKTVB |
 | Feb 13 | Antofagasta | 1 | AH Hotel |
@@ -18,6 +18,14 @@ Road trip through northern Chile: Santiago to Atacama Desert and back along the 
 **Total: 12 nights**
 
 ## Accommodation Details
+
+### Santiago (Feb 8–9)
+**Hostel Boutique Merced 88**
+- Address: Merced 88, Downtown Santiago, 8320119
+- Check-in: Sun Feb 8, 3:00 PM
+- Check-out: Mon Feb 9, 11:00 AM
+- Breakfast included
+- Free WiFi, airport shuttle
 
 ### San Pedro de Atacama (Feb 11–13)
 **EcoLodge MAKTVB**
@@ -66,8 +74,9 @@ Road trip through northern Chile: Santiago to Atacama Desert and back along the 
 
 ## Day Trips & Highlights
 
-### From Santiago (Feb 8)
+### From Santiago (Feb 8–9)
 - **Cajon del Maipo**: Embalse El Yeso, Banos Colina hot springs
+- **Feb 9 morning**: Walk in the hills before heading to Valparaiso
 
 ### From San Pedro (Feb 11–12)
 - **El Tatio Geysers**: 4am departure, 1.5h drive, 4,300m altitude
@@ -106,4 +115,4 @@ Road trip through northern Chile: Santiago to Atacama Desert and back along the 
 
 - All accommodations have parking
 - Laundry available at: San Pedro, Antofagasta, Bahia Inglesa
-- Breakfast included at: San Pedro, La Serena
+- Breakfast included at: Santiago, San Pedro, La Serena
