@@ -492,6 +492,83 @@
             line-height: 1.8;
         }
 
+        .itinerary-table, .distances-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .itinerary-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: #f0f0f0;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .itinerary-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .itinerary-table td:last-child {
+            text-align: center;
+            color: #888;
+        }
+
+        .total-nights {
+            text-align: right;
+            font-weight: 600;
+            color: #e63946;
+            font-size: 13px;
+            margin: 8px 0 0 0;
+        }
+
+        .distances-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .distances-table td:first-child {
+            color: #333;
+        }
+
+        .distances-table td:last-child {
+            text-align: right;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .highlight-group {
+            margin-bottom: 16px;
+        }
+
+        .highlight-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .highlight-item {
+            font-size: 13px;
+            color: #555;
+            padding: 6px 0 6px 12px;
+            border-left: 3px solid #2a9d8f;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .highlight-item strong {
+            color: #1a1a2e;
+        }
+
         @media (max-width: 600px) {
             .details-toggle {
                 top: auto;
@@ -525,6 +602,24 @@
             </div>
             <div class="details-body">
                 <p class="details-intro">Road trip through northern Chile: Santiago to Atacama Desert and back along the coast.</p>
+
+                <h3>Itinerary Overview</h3>
+                <table class="itinerary-table">
+                    <thead>
+                        <tr><th>Dates</th><th>Location</th><th>Nights</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Feb 8</td><td>Santiago</td><td>1</td></tr>
+                        <tr><td>Feb 9–10</td><td>Valparaíso</td><td>2</td></tr>
+                        <tr><td>Feb 11–12</td><td>San Pedro de Atacama</td><td>2</td></tr>
+                        <tr><td>Feb 13</td><td>Antofagasta</td><td>1</td></tr>
+                        <tr><td>Feb 14–15</td><td>Bahía Inglesa</td><td>2</td></tr>
+                        <tr><td>Feb 16–17</td><td>La Serena</td><td>2</td></tr>
+                        <tr><td>Feb 18–19</td><td>Cajón del Maipo</td><td>2</td></tr>
+                        <tr><td>Feb 20</td><td>Fly home</td><td>—</td></tr>
+                    </tbody>
+                </table>
+                <p class="total-nights">Total: 12 nights</p>
 
                 <h3>Accommodation</h3>
 
@@ -584,17 +679,78 @@
                     </div>
                 </div>
 
+                <h3>Day Trips & Highlights</h3>
+
+                <div class="highlight-group">
+                    <div class="highlight-title">From Santiago (Feb 8)</div>
+                    <div class="highlight-item">
+                        <strong>Cajón del Maipo</strong> — Embalse El Yeso, Baños Colina hot springs
+                    </div>
+                </div>
+
+                <div class="highlight-group">
+                    <div class="highlight-title">From San Pedro (Feb 11–12)</div>
+                    <div class="highlight-item">
+                        <strong>El Tatio Geysers</strong> — 4am departure, 1.5h drive, 4,300m altitude
+                    </div>
+                    <div class="highlight-item">
+                        <strong>Valle de la Luna</strong> — Sunset visit, 20min from San Pedro
+                    </div>
+                </div>
+
+                <div class="highlight-group">
+                    <div class="highlight-title">En Route (Feb 13–14)</div>
+                    <div class="highlight-item">
+                        <strong>Mano del Desierto</strong> — Giant hand sculpture, between San Pedro & Antofagasta
+                    </div>
+                    <div class="highlight-item">
+                        <strong>Pan de Azúcar NP</strong> — Coastal desert, cacti, guanacos
+                    </div>
+                </div>
+
+                <div class="highlight-group">
+                    <div class="highlight-title">From La Serena (Feb 16–17)</div>
+                    <div class="highlight-item">
+                        <strong>Isla Damas</strong> — Boat trip: penguins, dolphins, sea lions (1.5h drive)
+                    </div>
+                    <div class="highlight-item">
+                        <strong>Valle del Elqui</strong> — Pisco distilleries, Vicuña (1h drive)
+                    </div>
+                </div>
+
+                <div class="highlight-group">
+                    <div class="highlight-title">From Cajón del Maipo (Feb 18–19)</div>
+                    <div class="highlight-item">
+                        <strong>Baños Morales</strong> — Natural thermal baths at 1,850m, open 24h
+                    </div>
+                </div>
+
                 <h3>Final Days Plan</h3>
                 <div class="plan-section">
                     <strong>Feb 18:</strong> Drive from La Serena (5h), day in Santiago, then to San Alfonso<br>
-                    <strong>Feb 19:</strong> Full day in mountains — Baños Morales thermal baths (1,850m, open 24h)<br>
+                    <strong>Feb 19:</strong> Full day in mountains — Baños Morales thermal baths<br>
                     <strong>Feb 20:</strong> Return early to Santiago, fly home
                 </div>
+
+                <h3>Driving Distances</h3>
+                <table class="distances-table">
+                    <tbody>
+                        <tr><td>Santiago → Valparaíso</td><td>1.5h</td></tr>
+                        <tr><td>Valparaíso → Santiago Airport</td><td>1.5h</td></tr>
+                        <tr><td>Santiago → Calama</td><td>✈ 2h</td></tr>
+                        <tr><td>Calama Airport → San Pedro</td><td>1h</td></tr>
+                        <tr><td>San Pedro → Antofagasta</td><td>3.5h</td></tr>
+                        <tr><td>Antofagasta → Bahía Inglesa</td><td>4.5h</td></tr>
+                        <tr><td>Bahía Inglesa → La Serena</td><td>4.5h</td></tr>
+                        <tr><td>La Serena → Santiago</td><td>5h</td></tr>
+                        <tr><td>Santiago → San Alfonso</td><td>1.5h</td></tr>
+                    </tbody>
+                </table>
 
                 <h3>Notes</h3>
                 <ul class="notes-list">
                     <li>All accommodations have parking</li>
-                    <li>Laundry: San Pedro, Antofagasta, Bahía Inglesa</li>
+                    <li>Laundry available: San Pedro, Antofagasta, Bahía Inglesa</li>
                     <li>Breakfast included: San Pedro, La Serena</li>
                 </ul>
             </div>
