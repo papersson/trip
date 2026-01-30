@@ -1,4 +1,4 @@
-# Chile Trip - February 2026
+# Chile — February 2026
 
 Road trip through northern Chile: Santiago to Atacama Desert and back along the coast.
 
